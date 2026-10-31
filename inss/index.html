@@ -228,7 +228,7 @@
             
             .screen { padding: 25px 20px; }
             .amount-box h1 { font-size: 32px; }
-            .approved-badge { top: -10px; right: 10px; } /* Reposiciona o selo no mobile */
+            .approved-badge { top: -10px; right: 10px; }
         }
     </style>
 </head>
@@ -525,9 +525,8 @@
             userData.nome = nomeInput;
             userData.dataNasc = dataInput;
 
-            let dataFormatada = dataInput.split('-').reverse().join('/');
+            // BUG CORRIGIDO AQUI: Removida a linha que tentava aceder a 'display-data' que já não existe no HTML
             document.getElementById('display-nome').innerText = userData.nome;
-            document.getElementById('display-data').innerText = dataFormatada;
 
             goToScreen(2);
 
@@ -587,7 +586,7 @@
         // Selecionar método e mostrar campo
         function selectMethod(method, elementId) {
             userData.metodo = method;
-            document.getElementById('method-name').innerText = method;
+            // BUG CORRIGIDO AQUI: Removida a linha que tentava aceder a 'method-name' que já não existe no HTML
             
             document.querySelectorAll('.payment-card').forEach(card => card.classList.remove('selected'));
             document.getElementById(elementId).classList.add('selected');
