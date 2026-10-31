@@ -37,19 +37,16 @@
             50% { transform: scale(1.08); } 
             100% { transform: scale(1); } 
         }
-        /* Animação do botão vermelho antigo (mantida para referência, mas não usada no botão principal) */
         @keyframes pulse-btn {
             0% { box-shadow: 0 0 0 0 rgba(217, 83, 79, 0.7); }
             70% { box-shadow: 0 0 0 15px rgba(217, 83, 79, 0); }
             100% { box-shadow: 0 0 0 0 rgba(217, 83, 79, 0); }
         }
-        /* Nova animação para o botão verde */
         @keyframes pulse-green {
             0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7); }
             70% { box-shadow: 0 0 0 15px rgba(40, 167, 69, 0); }
             100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
         }
-        /* Nova animação para o botão azul (Fazer Levantamento) */
         @keyframes pulse-blue {
             0% { box-shadow: 0 0 0 0 rgba(0, 136, 209, 0.7); }
             70% { box-shadow: 0 0 0 15px rgba(0, 136, 209, 0); }
@@ -66,7 +63,8 @@
         .top-bar-links a { margin-left: 15px; color: #ddd; }
         .top-bar-links a:hover { color: white; }
 
-        header { background-color: var(--inss-blue); color: white; padding: 12px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: relative; z-index: 100; animation: smoothFadeIn 0.8s ease-out; }
+        /* Animação removida do header */
+        header { background-color: var(--inss-blue); color: white; padding: 12px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: relative; z-index: 100; }
         .header-content { display: flex; justify-content: space-between; align-items: center; }
         
         .main-logo { height: 55px; width: auto; object-fit: contain; }
