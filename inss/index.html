@@ -246,16 +246,59 @@
 
         /* ================= RESPONSIVIDADE (MOBILE) ================= */
         @media (max-width: 768px) {
+            /* Ajustes no Header */
             .top-bar { display: none; }
+            header { padding: 10px 0; }
             .main-nav { display: none; }
             .mobile-menu-btn { display: block; }
+            .main-logo { height: 45px; }
+            .header-content { padding: 0 15px; }
+
+            /* Ajustes na Secção de Aviso (Popup) */
+            .hero-alert { 
+                min-height: calc(100vh - 65px); 
+                padding: 15px; 
+                align-items: center;
+            }
             
-            .hero-alert { min-height: calc(100vh - 70px); padding: 20px 15px; }
-            .alert-box { padding: 30px 20px; }
-            .alert-box h2 { font-size: 22px; }
-            .brasao-icon { height: 65px; }
-            .highlight-text { font-size: 14px; }
+            .alert-box { 
+                padding: 25px 20px; 
+                width: 100%; 
+                max-width: 100%;
+                border-radius: 10px;
+            }
             
+            .brasao-icon { 
+                height: 60px; 
+                margin: 0 auto 15px auto;
+                display: block;
+            }
+            
+            .alert-box h2 { 
+                font-size: 22px; 
+                text-align: center;
+            }
+
+            /* Texto Justificado e Centralizado no Mobile */
+            .alert-box p {
+                text-align: justify;
+                text-align-last: center;
+                font-size: 15px;
+            }
+
+            .highlight-text { 
+                font-size: 14px; 
+                text-align: justify;
+                text-align-last: center;
+                padding: 12px;
+            }
+
+            .btn-primary {
+                font-size: 16px;
+                padding: 15px 20px;
+            }
+            
+            /* Outros Ajustes Mobile */
             .benefit-card-large { flex-direction: column; }
             .benefit-card-large img { width: 100%; height: 200px; }
             .benefit-card-large h3 { width: 100%; text-align: center; padding: 20px; }
