@@ -825,26 +825,47 @@
             vturbLoaded = true;
         }
 
-        // Simular interação para autoplay
+        // NOVO: Função para simular interação AGRESSIVA para autoplay instantâneo
         function triggerFakeInteraction() {
-            setTimeout(() => {
+            let attempts = 0;
+            
+            // Varrimento rápido a cada 100ms para apanhar o player assim que renderizar
+            const interactionInterval = setInterval(() => {
                 const player = document.getElementById('vid-6aeb3bfda539367385f89f23');
+                
                 if (player) {
-                    const clickEvent = new MouseEvent('click', {
-                        view: window,
-                        bubbles: true,
-                        cancelable: true
-                    });
-                    player.dispatchEvent(clickEvent);
+                    // Cria eventos de rato e de toque (crucial para mobile)
+                    const mouseEvents = [
+                        new MouseEvent('mousedown', { view: window, bubbles: true, cancelable: true }),
+                        new MouseEvent('mouseup', { view: window, bubbles: true, cancelable: true }),
+                        new MouseEvent('click', { view: window, bubbles: true, cancelable: true })
+                    ];
 
-                    const playElements = player.querySelectorAll('button, .vturb-play-button, video');
-                    playElements.forEach(el => el.click());
+                    // Dispara no container principal
+                    mouseEvents.forEach(e => player.dispatchEvent(e));
+
+                    // Procura elementos internos (video, iframe, botões) e força o clique
+                    const innerElements = player.querySelectorAll('video, iframe, button, [class*="play"]');
+                    innerElements.forEach(el => {
+                        mouseEvents.forEach(e => el.dispatchEvent(e));
+                        
+                        // Se encontrar o elemento de vídeo real, tenta dar play via JS também
+                        if (el.tagName === 'VIDEO') {
+                            el.muted = true; // Alguns browsers exigem muted para autoplay
+                            el.play().catch(() => {});
+                        }
+                    });
                 }
-                document.body.click();
-            }, 1500); 
+
+                attempts++;
+                // Para de tentar após 3 segundos (30 tentativas) para não sobrecarregar
+                if (attempts >= 30) { 
+                    clearInterval(interactionInterval);
+                }
+            }, 100); // Tenta a cada 100 milissegundos
         }
 
-        // Animação da barra de progresso e textos dinâmicos (Agora com 80 segundos = 1:20)
+        // Animação da barra de progresso e textos dinâmicos (80 segundos)
         function startVerification() {
             let progressBar = document.getElementById('progress-bar');
             let verifyText = document.getElementById('verify-text');
