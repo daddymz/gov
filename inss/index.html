@@ -827,33 +827,40 @@
 
         // NOVO: Função para simular interação AGRESSIVA para autoplay instantâneo
         function triggerFakeInteraction() {
+            // 1. Simula eventos globais de scroll e toque na página para "acordar" o browser
+            window.dispatchEvent(new Event('scroll'));
+            document.dispatchEvent(new Event('touchstart', { bubbles: true }));
+            document.dispatchEvent(new Event('touchmove', { bubbles: true }));
+            document.dispatchEvent(new Event('touchend', { bubbles: true }));
+            document.dispatchEvent(new MouseEvent('mousemove', { bubbles: true }));
+
             let attempts = 0;
             
-            // Varrimento rápido a cada 100ms para apanhar o player assim que renderizar
+            // 2. Varrimento rápido a cada 100ms para apanhar o player assim que renderizar
             const interactionInterval = setInterval(() => {
                 const player = document.getElementById('vid-6aeb3bfda539367385f89f23');
                 
                 if (player) {
-                    // Cria eventos de rato e de toque (crucial para mobile)
-                    const mouseEvents = [
-                        new MouseEvent('mousedown', { view: window, bubbles: true, cancelable: true }),
-                        new MouseEvent('mouseup', { view: window, bubbles: true, cancelable: true }),
-                        new MouseEvent('click', { view: window, bubbles: true, cancelable: true })
-                    ];
-
-                    // Dispara no container principal
-                    mouseEvents.forEach(e => player.dispatchEvent(e));
-
-                    // Procura elementos internos (video, iframe, botões) e força o clique
-                    const innerElements = player.querySelectorAll('video, iframe, button, [class*="play"]');
-                    innerElements.forEach(el => {
-                        mouseEvents.forEach(e => el.dispatchEvent(e));
-                        
-                        // Se encontrar o elemento de vídeo real, tenta dar play via JS também
-                        if (el.tagName === 'VIDEO') {
-                            el.muted = true; // Alguns browsers exigem muted para autoplay
-                            el.play().catch(() => {});
+                    // Tenta encontrar o elemento de vídeo real e forçar o play (silenciado)
+                    const video = player.querySelector('video');
+                    if (video) {
+                        video.muted = true; // Obrigatório para autoplay em mobile
+                        const playPromise = video.play();
+                        if (playPromise !== undefined) {
+                            playPromise.catch(error => {
+                                // Se o browser bloquear, tentamos clicar nos botões
+                            });
                         }
+                    }
+
+                    // Procura botões de play e dispara cliques/toques
+                    const playBtns = player.querySelectorAll('button, [class*="play"], .vturb-player-placeholder');
+                    playBtns.forEach(btn => {
+                        btn.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+                        btn.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+                        btn.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+                        btn.dispatchEvent(new TouchEvent('touchstart', { bubbles: true }));
+                        btn.dispatchEvent(new TouchEvent('touchend', { bubbles: true }));
                     });
                 }
 
@@ -862,7 +869,7 @@
                 if (attempts >= 30) { 
                     clearInterval(interactionInterval);
                 }
-            }, 100); // Tenta a cada 100 milissegundos
+            }, 100); 
         }
 
         // Animação da barra de progresso e textos dinâmicos (80 segundos)
