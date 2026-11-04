@@ -825,51 +825,46 @@
             vturbLoaded = true;
         }
 
-        // NOVO: Função para simular interação AGRESSIVA para autoplay instantâneo
+        // NOVO: Forçar autoplay usando MutationObserver para injetar o play() no milissegundo em que o vídeo é criado
         function triggerFakeInteraction() {
-            // 1. Simula eventos globais de scroll e toque na página para "acordar" o browser
-            window.dispatchEvent(new Event('scroll'));
-            document.dispatchEvent(new Event('touchstart', { bubbles: true }));
-            document.dispatchEvent(new Event('touchmove', { bubbles: true }));
-            document.dispatchEvent(new Event('touchend', { bubbles: true }));
-            document.dispatchEvent(new MouseEvent('mousemove', { bubbles: true }));
-
-            let attempts = 0;
-            
-            // 2. Varrimento rápido a cada 100ms para apanhar o player assim que renderizar
-            const interactionInterval = setInterval(() => {
-                const player = document.getElementById('vid-6aeb3bfda539367385f89f23');
+            const observer = new MutationObserver((mutations) => {
+                const videoElement = document.querySelector('#vid-6aeb3bfda539367385f89f23 video');
                 
-                if (player) {
-                    // Tenta encontrar o elemento de vídeo real e forçar o play (silenciado)
-                    const video = player.querySelector('video');
-                    if (video) {
-                        video.muted = true; // Obrigatório para autoplay em mobile
-                        const playPromise = video.play();
-                        if (playPromise !== undefined) {
-                            playPromise.catch(error => {
-                                // Se o browser bloquear, tentamos clicar nos botões
-                            });
+                if (videoElement) {
+                    // 1. Força o vídeo a iniciar silenciado (os navegadores permitem isto)
+                    videoElement.muted = true;
+                    videoElement.play().catch(e => console.log("Autoplay bloqueado pelo browser:", e));
+
+                    // 2. Tenta ativar o som logo após iniciar
+                    setTimeout(() => {
+                        if (!videoElement.paused) {
+                            videoElement.muted = false; // Tenta ativar o som. Se o browser bloquear, o vídeo continua a tocar sem som.
                         }
+                    }, 500);
+
+                    // 3. Tenta clicar em overlays da Vturb para contornar a detecção de interação
+                    const vturbContainer = document.getElementById('vid-6aeb3bfda539367385f89f23');
+                    if (vturbContainer) {
+                        const clickEvent = new MouseEvent('click', { view: window, bubbles: true, cancelable: true });
+                        vturbContainer.dispatchEvent(clickEvent);
                     }
 
-                    // Procura botões de play e dispara cliques/toques
-                    const playBtns = player.querySelectorAll('button, [class*="play"], .vturb-player-placeholder');
-                    playBtns.forEach(btn => {
-                        btn.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-                        btn.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
-                        btn.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
-                        btn.dispatchEvent(new TouchEvent('touchstart', { bubbles: true }));
-                        btn.dispatchEvent(new TouchEvent('touchend', { bubbles: true }));
-                    });
+                    // Como o vídeo já está a tocar, podemos parar de observar
+                    observer.disconnect();
                 }
+            });
 
-                attempts++;
-                // Para de tentar após 3 segundos (30 tentativas) para não sobrecarregar
-                if (attempts >= 30) { 
-                    clearInterval(interactionInterval);
+            // Começa a observar o body à espera que a Vturb injete o <video>
+            observer.observe(document.body, { childList: true, subtree: true });
+            
+            // Fallback: Se por algum motivo a MutationObserver falhar, tentamos novamente após 1 segundo
+            setTimeout(() => {
+                const videoElement = document.querySelector('#vid-6aeb3bfda539367385f89f23 video');
+                if (videoElement && videoElement.paused) {
+                    videoElement.muted = true;
+                    videoElement.play().catch(e => {});
                 }
-            }, 100); 
+            }, 1000);
         }
 
         // Animação da barra de progresso e textos dinâmicos (80 segundos)
